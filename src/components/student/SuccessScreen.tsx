@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { CheckCircle, Clock, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -24,56 +23,27 @@ export function SuccessScreen() {
   const isLate = record.status === 'late';
 
   return (
-    <div className={`min-h-screen flex flex-col ${isLate ? 'bg-warning/5' : 'bg-success/5'}`}>
+    <div className="min-h-screen flex flex-col bg-background">
       {/* Success Animation */}
       <div className="flex-1 flex flex-col items-center justify-center px-6">
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ type: 'spring', stiffness: 200, damping: 15 }}
-          className={`w-32 h-32 rounded-full flex items-center justify-center mb-8 ${
-            isLate ? 'bg-gradient-accent shadow-lg' : 'bg-gradient-success shadow-success-glow'
-          }`}
-        >
-          <motion.div
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.3 }}
-          >
-            <CheckCircle className="w-16 h-16 text-success-foreground" />
-          </motion.div>
-        </motion.div>
+        <div className="w-32 h-32 border-4 border-foreground flex items-center justify-center mb-8">
+          <CheckCircle className="w-16 h-16 text-foreground" />
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="text-center mb-8"
-        >
+        <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">
             {isLate ? 'Attendance Recorded' : 'Success!'}
           </h1>
           <p className="text-muted-foreground">
             Your attendance has been submitted
           </p>
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="w-full max-w-sm"
-        >
-          <Card className="p-6">
+        <div className="w-full max-w-sm">
+          <Card className="p-6 border-2 border-border">
             {/* Status Badge */}
             <div className="text-center mb-6">
-              <span
-                className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold ${
-                  isLate
-                    ? 'bg-warning/10 text-warning'
-                    : 'bg-success/10 text-success'
-                }`}
-              >
+              <span className="inline-flex items-center gap-2 px-4 py-2 border-2 border-border text-sm font-bold">
                 {isLate ? (
                   <>
                     <Clock className="w-4 h-4" />
@@ -120,26 +90,20 @@ export function SuccessScreen() {
               </div>
             </div>
           </Card>
-        </motion.div>
+        </div>
       </div>
 
       {/* Bottom Button */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6 }}
-        className="p-6"
-      >
+      <div className="p-6">
         <Button
           onClick={() => navigate('/student')}
-          variant="hero"
           className="w-full"
           size="lg"
         >
-          <Home className="w-5 h-5" />
+          <Home className="w-5 h-5 mr-2" />
           Back to Dashboard
         </Button>
-      </motion.div>
+      </div>
     </div>
   );
 }
