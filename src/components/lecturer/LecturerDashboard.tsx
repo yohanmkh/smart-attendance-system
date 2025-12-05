@@ -20,9 +20,9 @@ export function LecturerDashboard() {
   const totalAttendance = attendanceRecords.length;
 
   return (
-    <div className="min-h-screen bg-gradient-surface">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
       {/* Header */}
-      <div className="bg-gradient-hero px-6 pt-6 pb-8 text-primary-foreground">
+      <div className="bg-gradient-to-br from-primary via-indigo-600 to-purple-600 px-6 pt-6 pb-8 text-white shadow-lg">
         <div className="flex items-center justify-between mb-6">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -41,7 +41,7 @@ export function LecturerDashboard() {
             variant="ghost"
             size="icon"
             onClick={handleLogout}
-            className="text-primary-foreground hover:bg-primary-foreground/10"
+            className="text-white hover:bg-white/10 backdrop-blur-sm"
           >
             <LogOut className="w-5 h-5" />
           </Button>
@@ -54,19 +54,19 @@ export function LecturerDashboard() {
           transition={{ delay: 0.1 }}
           className="grid grid-cols-2 gap-4"
         >
-          <div className="bg-card/10 backdrop-blur-sm rounded-xl p-4">
-            <div className="flex items-center gap-2 text-primary-foreground/70 mb-1">
+          <div className="bg-white/20 backdrop-blur-xl rounded-2xl p-5 border border-white/30 shadow-lg">
+            <div className="flex items-center gap-2 text-white/80 mb-2">
               <Clock className="w-4 h-4" />
-              <span className="text-sm">Today</span>
+              <span className="text-sm font-medium">Today</span>
             </div>
-            <p className="text-2xl font-bold">{todaySessions} Sessions</p>
+            <p className="text-3xl font-bold text-white">{todaySessions} Sessions</p>
           </div>
-          <div className="bg-card/10 backdrop-blur-sm rounded-xl p-4">
-            <div className="flex items-center gap-2 text-primary-foreground/70 mb-1">
+          <div className="bg-white/20 backdrop-blur-xl rounded-2xl p-5 border border-white/30 shadow-lg">
+            <div className="flex items-center gap-2 text-white/80 mb-2">
               <Users className="w-4 h-4" />
-              <span className="text-sm">Attendance</span>
+              <span className="text-sm font-medium">Attendance</span>
             </div>
-            <p className="text-2xl font-bold">{totalAttendance} Total</p>
+            <p className="text-3xl font-bold text-white">{totalAttendance} Total</p>
           </div>
         </motion.div>
       </div>
@@ -82,14 +82,18 @@ export function LecturerDashboard() {
           
           <div className="space-y-4">
             {/* Face-to-Face Session */}
-            <Card
-              className="p-5 cursor-pointer hover:shadow-xl hover:border-primary/30 transition-all duration-300 group"
-              onClick={() => navigate('/lecturer/create-session?type=face-to-face')}
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-xl bg-gradient-primary flex items-center justify-center shadow-md group-hover:shadow-glow transition-shadow">
-                  <MapPin className="w-7 h-7 text-primary-foreground" />
-                </div>
+              <Card
+                className="p-6 cursor-pointer hover:shadow-2xl hover:shadow-primary/20 hover:border-primary/50 transition-all duration-300 group border-2 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm"
+                onClick={() => navigate('/lecturer/create-session?type=face-to-face')}
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary via-indigo-500 to-purple-500 flex items-center justify-center shadow-lg group-hover:shadow-xl group-hover:shadow-primary/30 transition-all">
+                    <MapPin className="w-8 h-8 text-white" strokeWidth={2.5} />
+                  </div>
                 <div className="flex-1">
                   <h4 className="font-bold text-foreground">Face-to-Face Session</h4>
                   <p className="text-muted-foreground text-sm">
@@ -97,23 +101,29 @@ export function LecturerDashboard() {
                   </p>
                 </div>
                 <motion.div
-                  className="text-primary text-xl"
+                  className="text-primary text-2xl font-bold"
                   whileHover={{ x: 5 }}
+                  transition={{ type: "spring", stiffness: 400 }}
                 >
                   →
                 </motion.div>
               </div>
             </Card>
+            </motion.div>
 
             {/* Online Session */}
-            <Card
-              className="p-5 cursor-pointer hover:shadow-xl hover:border-accent/30 transition-all duration-300 group"
-              onClick={() => navigate('/lecturer/create-session?type=online')}
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-xl bg-gradient-accent flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
-                  <Monitor className="w-7 h-7 text-accent-foreground" />
-                </div>
+              <Card
+                className="p-6 cursor-pointer hover:shadow-2xl hover:shadow-accent/20 hover:border-accent/50 transition-all duration-300 group border-2 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm"
+                onClick={() => navigate('/lecturer/create-session?type=online')}
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-500 flex items-center justify-center shadow-lg group-hover:shadow-xl group-hover:shadow-accent/30 transition-all">
+                    <Monitor className="w-8 h-8 text-white" strokeWidth={2.5} />
+                  </div>
                 <div className="flex-1">
                   <h4 className="font-bold text-foreground">Online Session</h4>
                   <p className="text-muted-foreground text-sm">
@@ -121,13 +131,15 @@ export function LecturerDashboard() {
                   </p>
                 </div>
                 <motion.div
-                  className="text-accent text-xl"
+                  className="text-accent text-2xl font-bold"
                   whileHover={{ x: 5 }}
+                  transition={{ type: "spring", stiffness: 400 }}
                 >
                   →
                 </motion.div>
               </div>
             </Card>
+            </motion.div>
           </div>
         </motion.div>
 

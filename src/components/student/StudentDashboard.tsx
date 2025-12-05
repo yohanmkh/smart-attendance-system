@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { LogOut, User, MapPin, Monitor, RefreshCw, Navigation, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/context/AuthContext';
 import { useSession } from '@/context/SessionContext';
 import { useNavigate } from 'react-router-dom';
@@ -42,13 +43,15 @@ export function StudentDashboard() {
     navigate(`/student/session/${sessionId}`);
   };
 
-  const faceToFaceSessions = nearbySessions.filter(s => s.type === 'face-to-face');
-  const onlineSessions = nearbySessions.filter(s => s.type === 'online');
+  // Hick's Law: Only show active, relevant sessions to reduce cognitive load
+  const activeSessions = nearbySessions.filter(s => s.isActive);
+  const faceToFaceSessions = activeSessions.filter(s => s.type === 'face-to-face');
+  const onlineSessions = activeSessions.filter(s => s.type === 'online');
 
   return (
-    <div className="min-h-screen bg-gradient-surface">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
       {/* Header */}
-      <div className="bg-gradient-hero px-6 pt-6 pb-8 text-primary-foreground">
+      <div className="bg-gradient-to-br from-primary via-indigo-600 to-purple-600 px-6 pt-6 pb-8 text-white shadow-lg">
         <div className="flex items-center justify-between mb-6">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -67,7 +70,7 @@ export function StudentDashboard() {
             variant="ghost"
             size="icon"
             onClick={handleLogout}
-            className="text-primary-foreground hover:bg-primary-foreground/10"
+            className="text-white hover:bg-white/10 backdrop-blur-sm"
           >
             <LogOut className="w-5 h-5" />
           </Button>
@@ -78,21 +81,21 @@ export function StudentDashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-card/10 backdrop-blur-sm rounded-xl p-4"
+          className="bg-white/20 backdrop-blur-xl rounded-2xl p-4 border border-white/30 shadow-lg"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="relative">
-                <Navigation className="w-5 h-5" />
+                <Navigation className="w-5 h-5 text-white" />
                 {isScanning && (
-                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-success rounded-full animate-pulse" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full animate-pulse shadow-lg shadow-green-400/50" />
                 )}
               </div>
               <div>
-                <p className="font-medium">
-                  {isScanning ? 'Scanning for sessions...' : `${nearbySessions.length} sessions found`}
+                <p className="font-semibold text-white">
+                  {isScanning ? 'Scanning for sessions...' : `${activeSessions.length} active session${activeSessions.length !== 1 ? 's' : ''} found`}
                 </p>
-                <p className="text-primary-foreground/70 text-xs">GPS Location Active</p>
+                <p className="text-white/80 text-xs">GPS Location Active</p>
               </div>
             </div>
             <Button
@@ -100,7 +103,7 @@ export function StudentDashboard() {
               size="icon"
               onClick={handleRefresh}
               disabled={isRefreshing}
-              className="text-primary-foreground hover:bg-primary-foreground/10"
+              className="text-white hover:bg-white/10 backdrop-blur-sm"
             >
               <RefreshCw className={`w-5 h-5 ${isRefreshing ? 'animate-spin' : ''}`} />
             </Button>
@@ -114,10 +117,32 @@ export function StudentDashboard() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="flex flex-col items-center justify-center py-12"
+            className="space-y-4"
           >
-            <Loader2 className="w-10 h-10 text-primary animate-spin mb-4" />
-            <p className="text-muted-foreground">Scanning for nearby sessions...</p>
+            {/* Skeleton Loading State - Visibility of System Status */}
+            <div className="space-y-2 mb-6">
+              <Skeleton className="h-6 w-32" />
+              <div className="space-y-3">
+                {[1, 2].map((i) => (
+                  <Card key={i} className="p-4">
+                    <div className="flex items-center gap-4">
+                      <Skeleton className="w-12 h-12 rounded-xl" />
+                      <div className="flex-1 space-y-2">
+                        <Skeleton className="h-5 w-3/4" />
+                        <Skeleton className="h-4 w-1/2" />
+                        <Skeleton className="h-3 w-1/4" />
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </div>
+            <div className="flex items-center justify-center py-4">
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span className="text-sm">Scanning for nearby sessions...</span>
+              </div>
+            </div>
           </motion.div>
         ) : (
           <>
@@ -135,15 +160,19 @@ export function StudentDashboard() {
                 </h3>
                 <div className="space-y-3">
                   {faceToFaceSessions.map((session) => (
-                    <Card
+                    <motion.div
                       key={session.id}
-                      className="p-4 cursor-pointer hover:shadow-xl hover:border-primary/30 transition-all duration-300"
-                      onClick={() => handleSelectSession(session.id)}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                     >
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-xl bg-gradient-primary flex items-center justify-center">
-                          <MapPin className="w-6 h-6 text-primary-foreground" />
-                        </div>
+                      <Card
+                        className="p-5 cursor-pointer hover:shadow-2xl hover:shadow-primary/20 hover:border-primary/50 transition-all duration-300 border-2 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm"
+                        onClick={() => handleSelectSession(session.id)}
+                      >
+                        <div className="flex items-center gap-4">
+                          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary via-indigo-500 to-purple-500 flex items-center justify-center shadow-lg">
+                            <MapPin className="w-7 h-7 text-white" strokeWidth={2.5} />
+                          </div>
                         <div className="flex-1">
                           <h4 className="font-bold text-foreground">{session.title}</h4>
                           <p className="text-muted-foreground text-sm">{session.lecturerName}</p>
@@ -157,13 +186,15 @@ export function StudentDashboard() {
                           </div>
                         </div>
                         <motion.div
-                          className="text-primary text-xl"
+                          className="text-primary text-2xl font-bold"
                           whileHover={{ x: 5 }}
+                          transition={{ type: "spring", stiffness: 400 }}
                         >
                           →
                         </motion.div>
                       </div>
                     </Card>
+                    </motion.div>
                   ))}
                 </div>
               </motion.div>
@@ -182,15 +213,19 @@ export function StudentDashboard() {
                 </h3>
                 <div className="space-y-3">
                   {onlineSessions.map((session) => (
-                    <Card
+                    <motion.div
                       key={session.id}
-                      className="p-4 cursor-pointer hover:shadow-xl hover:border-accent/30 transition-all duration-300"
-                      onClick={() => handleSelectSession(session.id)}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                     >
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-xl bg-gradient-accent flex items-center justify-center">
-                          <Monitor className="w-6 h-6 text-accent-foreground" />
-                        </div>
+                      <Card
+                        className="p-5 cursor-pointer hover:shadow-2xl hover:shadow-accent/20 hover:border-accent/50 transition-all duration-300 border-2 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm"
+                        onClick={() => handleSelectSession(session.id)}
+                      >
+                        <div className="flex items-center gap-4">
+                          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-500 flex items-center justify-center shadow-lg">
+                            <Monitor className="w-7 h-7 text-white" strokeWidth={2.5} />
+                          </div>
                         <div className="flex-1">
                           <h4 className="font-bold text-foreground">{session.title}</h4>
                           <p className="text-muted-foreground text-sm">{session.lecturerName}</p>
@@ -199,19 +234,21 @@ export function StudentDashboard() {
                           </span>
                         </div>
                         <motion.div
-                          className="text-accent text-xl"
+                          className="text-accent text-2xl font-bold"
                           whileHover={{ x: 5 }}
+                          transition={{ type: "spring", stiffness: 400 }}
                         >
                           →
                         </motion.div>
                       </div>
                     </Card>
+                    </motion.div>
                   ))}
                 </div>
               </motion.div>
             )}
 
-            {nearbySessions.length === 0 && (
+            {activeSessions.length === 0 && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -220,10 +257,19 @@ export function StudentDashboard() {
                 <div className="w-20 h-20 mx-auto bg-muted rounded-2xl flex items-center justify-center mb-4">
                   <MapPin className="w-10 h-10 text-muted-foreground" />
                 </div>
-                <h3 className="font-bold text-lg text-foreground mb-2">No Sessions Found</h3>
-                <p className="text-muted-foreground text-sm">
-                  Pull down to refresh or check back later
+                <h3 className="font-bold text-lg text-foreground mb-2">No Active Sessions</h3>
+                <p className="text-muted-foreground text-sm mb-4">
+                  No active sessions are available nearby right now.
                 </p>
+                <Button
+                  variant="outline"
+                  onClick={handleRefresh}
+                  disabled={isRefreshing}
+                  className="mt-2"
+                >
+                  <RefreshCw className={`w-4 h-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
+                  Refresh
+                </Button>
               </motion.div>
             )}
           </>
