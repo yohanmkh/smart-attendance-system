@@ -5,28 +5,28 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "sketchy-button inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground border-2 border-primary hover:bg-primary/90",
+          "bg-primary text-primary-foreground hover:bg-primary/90",
         destructive:
-          "bg-destructive text-destructive-foreground border-2 border-destructive hover:bg-destructive/90",
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
-          "border-2 border-border bg-background hover:bg-muted",
+          "bg-background hover:bg-muted",
         secondary:
-          "bg-secondary text-secondary-foreground border-2 border-border hover:bg-muted",
-        ghost: "hover:bg-muted",
-        link: "text-foreground underline-offset-4 hover:underline",
+          "bg-secondary text-secondary-foreground hover:bg-muted",
+        ghost: "border-0 hover:bg-muted",
+        link: "border-0 text-foreground underline-offset-4 hover:underline",
         accent:
-          "bg-accent text-accent-foreground border-2 border-border hover:bg-accent/90",
+          "bg-accent text-accent-foreground hover:bg-accent/90",
         success:
-          "bg-success text-success-foreground border-2 border-success hover:bg-success/90",
+          "bg-success text-success-foreground hover:bg-success/90",
         glass:
-          "bg-card border-2 border-border text-foreground hover:bg-muted",
+          "bg-card text-foreground hover:bg-muted",
         hero:
-          "bg-card text-foreground border-2 border-border hover:bg-muted",
+          "bg-card text-foreground hover:bg-muted",
       },
       size: {
         default: "h-11 px-5 py-2",

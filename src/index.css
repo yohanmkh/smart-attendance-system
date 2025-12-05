@@ -117,7 +117,7 @@
 
 @layer utilities {
   .glass {
-    @apply bg-card border border-border;
+    @apply bg-card border-2 border-foreground;
   }
 
   .text-gradient {
@@ -154,6 +154,32 @@
 
   .shadow-success-glow {
     box-shadow: none;
+  }
+
+  /* Sketchy hand-drawn border styles */
+  .sketchy {
+    @apply relative border-2 border-foreground bg-card;
+    border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+  }
+
+  .sketchy-sm {
+    @apply relative border-2 border-foreground bg-card;
+    border-radius: 15px 255px 15px 225px/225px 15px 255px 15px;
+  }
+
+  .sketchy-input {
+    @apply border-2 border-foreground bg-background;
+    border-radius: 225px 25px 255px 25px/25px 255px 25px 225px;
+  }
+
+  .sketchy-button {
+    @apply border-2 border-foreground;
+    border-radius: 255px 25px 225px 25px/25px 225px 25px 255px;
+  }
+
+  .sketchy-circle {
+    @apply border-2 border-foreground;
+    border-radius: 95% 75% 100% 80%/80% 95% 75% 100%;
   }
 
   /* Simple pulse for lo-fi */
